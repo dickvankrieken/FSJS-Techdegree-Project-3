@@ -385,7 +385,6 @@ paymentSelect.addEventListener('change', paymentSelectFunction);
 
 // Event listener that listens for form submit, and performs validation checks on the forms' input fields
 form.addEventListener('submit', () => {
-    event.preventDefault();
     if (!nameValidator()) {
         registerError();
         event.preventDefault();
