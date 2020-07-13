@@ -167,30 +167,9 @@ function nameValidator() {
 // Function that checks if the emailaddress is validly formatted
 function emailValidator() {
     const emailValue = email.value;
-    const indexOfAt = emailValue.indexOf('@');
-    const indexOfDot = emailValue.lastIndexOf('.');
-    if (indexOfAt > 1 && indexOfDot > (indexOfAt + 1)) {
-        email.style.border = '2px solid rgb(111, 157, 220)';
-        return true;
-    } else {
-        if (!document.querySelector('.email-error')) {
-            email.style.border = '1px solid red';
-            const errorMessage = document.createElement('div');
-            errorMessage.classList.add('error');
-            errorMessage.classList.add('email-error');
-            errorMessage.innerHTML = 'You have to provide a valid emailaddress to register';
-            document.querySelector('fieldset').insertBefore(errorMessage, document.querySelector('label[for="title"]'));
-        }
-        return false;
-    }
-}
-
-// Function that checks the users' input for the emailadress while typing
-function emailInputFunction() {
-    const emailValue = email.value;
-    const indexOfAt = emailValue.indexOf('@');
-    const indexOfDot = emailValue.lastIndexOf('.');
-    if (indexOfAt > 1 && indexOfDot > (indexOfAt + 1)) {
+// RegEx for email found at https://emailregex.com/
+    const emailRegEx = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+    if (emailValue.match(emailRegEx)) {
         email.style.border = '2px solid rgb(111, 157, 220)';
         if (document.querySelector('.email-error')) {
             document.querySelector('.email-error').remove();
@@ -216,7 +195,10 @@ function jobRoleValidator() {
         errorMessage.classList.add('error');
         errorMessage.classList.add('jobrole-error');
         errorMessage.innerHTML = 'Please specify your jobrole';
-        document.querySelector('fieldset').appendChild(errorMessage);    
+        document.querySelector('fieldset').appendChild(errorMessage);
+        return false;
+    } else {
+        return true;
     }
 
 }
@@ -360,7 +342,7 @@ ccMediaQueryFunction(ccMediaQuery);
  ******************************************/
 
 // Event listener that listens for input in the email field
-email.addEventListener('keyup', emailInputFunction);
+email.addEventListener('keyup', emailValidator);
 
 // Event listener that listens for changes to the theme options dropdown list
 checkTheme.addEventListener('change', checkThemeFunction);
@@ -386,18 +368,26 @@ paymentSelect.addEventListener('change', paymentSelectFunction);
 // Event listener that listens for form submit, and performs validation checks on the forms' input fields
 form.addEventListener('submit', () => {
     if (!nameValidator()) {
+        console.log('name');
+
         registerError();
         event.preventDefault();
     }
     if (!emailValidator()) {
+        console.log('email');
+
         registerError();
         event.preventDefault();
     }
     if (!jobRoleValidator()) {
+        console.log('jobrole');
+
         registerError();
         event.preventDefault();
     }
     if (!activitiesValidator()) {
+        console.log('activities');
+
         registerError();
         event.preventDefault();
     }
